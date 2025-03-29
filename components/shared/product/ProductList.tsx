@@ -1,4 +1,4 @@
-import { Product } from "@/types/product";
+import { Product } from "@/types";
 import ProductCard from "./ProductCard";
 
 function ProductList({
@@ -6,7 +6,7 @@ function ProductList({
   title,
   limit = 5,
 }: {
-  data: any;
+  data: Product[];
   title?: string;
   limit?: number;
 }) {

@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import ProductPrice from "./ProductPrice";
-import { Product } from "@/types/product";
+import { Product } from "@/types";
 
 function ProductCard({ product }: { product: Product }) {
   return (
