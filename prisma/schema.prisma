@@ -33,7 +33,7 @@ model User {
   image         String?
   password      String?
   role          String    @default("user")
-  address       Json      @db.Json
+  address       Json?     @db.Json
   paymentMethod String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -77,5 +77,5 @@ model VerificationToken {
   token      String
   expires    DateTime
 
-  @@unique([identifier, token])
+  @@id([identifier, token])
 }

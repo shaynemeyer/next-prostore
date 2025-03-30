@@ -23,3 +23,5 @@ npx tsx ./db/seed
 - [Server Actions and Mutations](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations)
 - [Zod](https://zod.dev/)
 - [Neon serverless driver](https://neon.tech/docs/serverless/serverless-driver)
+- [AuthJS - Prisma Adapter](https://authjs.dev/getting-started/adapters/prisma)
+- 
