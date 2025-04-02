@@ -1,11 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { Plus } from "lucide-react";
-import { CartItem } from "@/types";
-import { toast } from "sonner";
 import { addItemToCart } from "@/lib/actions/cart.actions";
+import { CartItem } from "@/types";
+import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 function AddToCart({ item }: { item: CartItem }) {
   const router = useRouter();
@@ -17,7 +17,7 @@ function AddToCart({ item }: { item: CartItem }) {
       return;
     }
 
-    toast(() => <>{`${item.name} added to cart`}</>, {
+    toast(() => <>{res.message}</>, {
       description: () => (
         <Button
           onClick={() => router.push("/cart")}
