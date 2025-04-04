@@ -128,7 +128,6 @@ export async function updateUserPaymentMethod(
     if (!currentUser) throw new Error("User not found");
 
     const paymentMethod = paymentMethodSchema.parse(data);
-    console.log({ paymentMethod });
 
     await prisma.user.update({
       where: { id: currentUser.id },
