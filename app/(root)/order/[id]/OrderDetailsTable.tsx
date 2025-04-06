@@ -1,6 +1,6 @@
-"use client";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+'use client';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -8,27 +8,27 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { formatCurrency, formatDateTime, formatId } from "@/lib/utils";
-import { Order } from "@/types";
-import Link from "next/link";
-import Image from "next/image";
-import { toast } from "sonner";
+} from '@/components/ui/table';
+import { formatCurrency, formatDateTime, formatId } from '@/lib/utils';
+import { Order } from '@/types';
+import Link from 'next/link';
+import Image from 'next/image';
+import { toast } from 'sonner';
 import {
   PayPalButtons,
   PayPalScriptProvider,
   usePayPalScriptReducer,
-} from "@paypal/react-paypal-js";
+} from '@paypal/react-paypal-js';
 import {
   createPayPalOrder,
   approvePayPalOrder,
-} from "@/lib/actions/order.actions";
+} from '@/lib/actions/order.actions';
 
 function OrderDetailsTable({
   order,
   paypalClientId,
 }: {
-  order: Omit<Order, "paymentResult">;
+  order: Omit<Order, 'paymentResult'>;
   paypalClientId: string;
 }) {
   const {
@@ -47,12 +47,12 @@ function OrderDetailsTable({
 
   const PrintLoadingState = () => {
     const [{ isPending, isRejected }] = usePayPalScriptReducer();
-    let status = "";
+    let status = '';
 
     if (isPending) {
-      status = "Loading PayPal...";
+      status = 'Loading PayPal...';
     } else if (isRejected) {
-      status = "Error Loading PayPal";
+      status = 'Error Loading PayPal';
     }
     return status;
   };
@@ -173,7 +173,7 @@ function OrderDetailsTable({
                 <div>{formatCurrency(totalPrice)}</div>
               </div>
               {/* PayPal Payment */}
-              {!isPaid && paymentMethod === "PayPal" && (
+              {!isPaid && paymentMethod === 'PayPal' && (
                 <div>
                   <PayPalScriptProvider options={{ clientId: paypalClientId }}>
                     <PrintLoadingState />
