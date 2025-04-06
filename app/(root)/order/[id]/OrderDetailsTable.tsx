@@ -23,13 +23,17 @@ import {
   createPayPalOrder,
   approvePayPalOrder,
 } from '@/lib/actions/order.actions';
+import MarkAsPaidButton from './MarkAsPaidButton';
+import MarkAsDeliveredButton from './MarkAsDeliveredButton';
 
 function OrderDetailsTable({
   order,
   paypalClientId,
+  isAdmin,
 }: {
   order: Omit<Order, 'paymentResult'>;
   paypalClientId: string;
+  isAdmin: boolean;
 }) {
   const {
     shippingAddress,
@@ -183,6 +187,15 @@ function OrderDetailsTable({
                     />
                   </PayPalScriptProvider>
                 </div>
+              )}
+              {/* Cash On Deliver */}
+              {isAdmin && !isPaid && paymentMethod === 'CashOnDelivery' && (
+                <MarkAsPaidButton id={order.id} />
+              )}
+
+              {/* Mark as Delivered */}
+              {isAdmin && isPaid && !isDelivered && (
+                <MarkAsDeliveredButton id={order.id} />
               )}
             </CardContent>
           </Card>
