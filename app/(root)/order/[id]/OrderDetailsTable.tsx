@@ -73,7 +73,7 @@ function OrderDetailsTable({
     if (!res.success) {
       toast.error(res.message);
     } else {
-      toast(res.message);
+      toast.success(res.message);
     }
   };
 
