@@ -1,6 +1,6 @@
-import { Metadata } from "next";
-import { requireAdmin } from "@/lib/auth-guard";
-import { getOrderSummary } from "@/lib/actions/order.actions";
+import { Metadata } from 'next';
+import { requireAdmin } from '@/lib/auth-guard';
+import { getOrderSummary } from '@/lib/actions/order.actions';
 import {
   Table,
   TableBody,
@@ -8,14 +8,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BadgeDollarSign, Barcode, CreditCard, Users } from "lucide-react";
-import { formatCurrency, formatDateTime, formatNumber } from "@/lib/utils";
-import Link from "next/link";
+} from '@/components/ui/table';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { BadgeDollarSign, Barcode, CreditCard, Users } from 'lucide-react';
+import { formatCurrency, formatDateTime, formatNumber } from '@/lib/utils';
+import Link from 'next/link';
+import Charts from './Charts';
 
 export const metadata: Metadata = {
-  title: "Admin Dashboard",
+  title: 'Admin Dashboard',
 };
 
 async function OverviewPage() {
@@ -80,11 +81,11 @@ async function OverviewPage() {
             <CardTitle>Overview</CardTitle>
           </CardHeader>
           <CardContent>
-            {/* <Charts
+            <Charts
               data={{
                 salesData: summary.salesData,
               }}
-            /> */}
+            />
           </CardContent>
         </Card>
         <Card className="col-span-3">
@@ -105,7 +106,7 @@ async function OverviewPage() {
                 {summary.latestSales.map((order) => (
                   <TableRow key={order.id}>
                     <TableCell>
-                      {order?.user?.name ? order.user.name : "Deleted User"}
+                      {order?.user?.name ? order.user.name : 'Deleted User'}
                     </TableCell>
                     <TableCell>
                       {formatDateTime(order.createdAt).dateOnly}
