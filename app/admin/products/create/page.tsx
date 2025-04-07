@@ -1,10 +1,10 @@
-import React from 'react';
-import { Metadata } from 'next';
-import { requireAdmin } from '@/lib/auth-guard';
-import ProductForm from '@/components/shared/product/ProductForm';
+import React from "react";
+import { Metadata } from "next";
+import { requireAdmin } from "@/lib/auth-guard";
+import ProductForm from "@/components/admin/ProductForm";
 
 export const metadata: Metadata = {
-  title: 'Create Product',
+  title: "Create Product",
 };
 
 async function CreateProductPage() {
