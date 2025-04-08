@@ -1,17 +1,17 @@
-'use server';
-import { prisma } from '@/db/prisma';
-import { convertToPlainObject, formatError } from '../utils';
-import { LATEST_PRODUCTS_LIMIT, PAGE_SIZE } from '../constants';
-import { Prisma } from '@prisma/client';
-import { revalidatePath } from 'next/cache';
-import { insertProductSchema, updateProductSchema } from '../validators';
-import { z } from 'zod';
+"use server";
+import { prisma } from "@/db/prisma";
+import { convertToPlainObject, formatError } from "../utils";
+import { LATEST_PRODUCTS_LIMIT, PAGE_SIZE } from "../constants";
+import { Prisma } from "@prisma/client";
+import { revalidatePath } from "next/cache";
+import { productFormSchema, updateProductSchema } from "../validators";
+import { z } from "zod";
 
 // Get latest products
 export async function getLatestProducts() {
   const data = await prisma.product.findMany({
     take: LATEST_PRODUCTS_LIMIT,
-    orderBy: { createdAt: 'desc' },
+    orderBy: { createdAt: "desc" },
   });
 
   return convertToPlainObject(data);
@@ -53,32 +53,32 @@ export async function getAllProducts({
 }) {
   // Query filter
   const queryFilter: Prisma.ProductWhereInput =
-    query && query !== 'all'
+    query && query !== "all"
       ? {
           name: {
             contains: query,
-            mode: 'insensitive',
+            mode: "insensitive",
           } as Prisma.StringFilter,
         }
       : {};
 
   // Category filter
-  const categoryFilter = category && category !== 'all' ? { category } : {};
+  const categoryFilter = category && category !== "all" ? { category } : {};
 
   // Price filter
   const priceFilter: Prisma.ProductWhereInput =
-    price && price !== 'all'
+    price && price !== "all"
       ? {
           price: {
-            gte: Number(price.split('-')[0]),
-            lte: Number(price.split('-')[1]),
+            gte: Number(price.split("-")[0]),
+            lte: Number(price.split("-")[1]),
           },
         }
       : {};
 
   // Rating filter
   const ratingFilter =
-    rating && rating !== 'all'
+    rating && rating !== "all"
       ? {
           rating: {
             gte: Number(rating),
@@ -94,13 +94,13 @@ export async function getAllProducts({
       ...ratingFilter,
     },
     orderBy:
-      sort === 'lowest'
-        ? { price: 'asc' }
-        : sort === 'highest'
-        ? { price: 'desc' }
-        : sort === 'rating'
-        ? { rating: 'desc' }
-        : { createdAt: 'desc' },
+      sort === "lowest"
+        ? { price: "asc" }
+        : sort === "highest"
+        ? { price: "desc" }
+        : sort === "rating"
+        ? { rating: "desc" }
+        : { createdAt: "desc" },
     skip: (page - 1) * limit,
     take: limit,
   });
@@ -120,15 +120,15 @@ export async function deleteProduct(id: string) {
       where: { id },
     });
 
-    if (!productExists) throw new Error('Product not found');
+    if (!productExists) throw new Error("Product not found");
 
     await prisma.product.delete({ where: { id } });
 
-    revalidatePath('/admin/products');
+    revalidatePath("/admin/products");
 
     return {
       success: true,
-      message: 'Product deleted successfully',
+      message: "Product deleted successfully",
     };
   } catch (error) {
     return { success: false, message: formatError(error) };
@@ -136,16 +136,16 @@ export async function deleteProduct(id: string) {
 }
 
 // Create a product
-export async function createProduct(data: z.infer<typeof insertProductSchema>) {
+export async function createProduct(data: z.infer<typeof productFormSchema>) {
   try {
-    const product = insertProductSchema.parse(data);
+    const product = productFormSchema.parse(data);
     await prisma.product.create({ data: product });
 
-    revalidatePath('/admin/products');
+    revalidatePath("/admin/products");
 
     return {
       success: true,
-      message: 'Product created successfully',
+      message: "Product created successfully",
     };
   } catch (error) {
     return { success: false, message: formatError(error) };
@@ -160,18 +160,18 @@ export async function updateProduct(data: z.infer<typeof updateProductSchema>) {
       where: { id: product.id },
     });
 
-    if (!productExists) throw new Error('Product not found');
+    if (!productExists) throw new Error("Product not found");
 
     await prisma.product.update({
       where: { id: product.id },
       data: product,
     });
 
-    revalidatePath('/admin/products');
+    revalidatePath("/admin/products");
 
     return {
       success: true,
-      message: 'Product updated successfully',
+      message: "Product updated successfully",
     };
   } catch (error) {
     return { success: false, message: formatError(error) };

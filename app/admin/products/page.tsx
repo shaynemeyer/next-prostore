@@ -1,8 +1,8 @@
-import Pagination from '@/components/shared/Pagination';
-import { deleteProduct, getAllProducts } from '@/lib/actions/product.actions';
-import { formatCurrency, formatId } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { requireAdmin } from '@/lib/auth-guard';
+import Pagination from "@/components/shared/Pagination";
+import { deleteProduct, getAllProducts } from "@/lib/actions/product.actions";
+import { formatCurrency, formatId } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { requireAdmin } from "@/lib/auth-guard";
 import {
   Table,
   TableBody,
@@ -10,9 +10,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import Link from 'next/link';
-import DeleteDialog from '@/components/shared/delete-dialog/DeleteDialog';
+} from "@/components/ui/table";
+import Link from "next/link";
+import DeleteDialog from "@/components/shared/delete-dialog/DeleteDialog";
 
 async function ProductsPage(props: {
   searchParams: Promise<{
@@ -26,8 +26,8 @@ async function ProductsPage(props: {
   const searchParams = await props.searchParams;
 
   const page = Number(searchParams.page) || 1;
-  const searchText = searchParams.query || '';
-  const category = searchParams.category || '';
+  const searchText = searchParams.query || "";
+  const category = searchParams.category || "";
 
   const products = await getAllProducts({
     limit: 10,
@@ -43,7 +43,7 @@ async function ProductsPage(props: {
           <h1 className="h2-bold">Products</h1>
           {searchText && (
             <div>
-              Filtered by <i>&quot;{searchText}&quot;</i>{' '}
+              Filtered by <i>&quot;{searchText}&quot;</i>{" "}
               <Link href="/admin/products">
                 <Button variant="outline" size="sm">
                   Remove Filter
@@ -56,42 +56,47 @@ async function ProductsPage(props: {
           <Link href="/admin/products/create">Create Product</Link>
         </Button>
       </div>
-
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>NAME</TableHead>
-            <TableHead className="text-right">PRICE</TableHead>
-            <TableHead>CATEGORY</TableHead>
-            <TableHead>STOCK</TableHead>
-            <TableHead>RATING</TableHead>
-            <TableHead className="w-[100px]">ACTIONS</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {products.data.map((product) => (
-            <TableRow key={product.id}>
-              <TableCell>{formatId(product.id)}</TableCell>
-              <TableCell>{product.name}</TableCell>
-              <TableCell className="text-right">
-                {formatCurrency(product.price)}
-              </TableCell>
-              <TableCell>{product.category}</TableCell>
-              <TableCell>{product.stock}</TableCell>
-              <TableCell>{product.rating}</TableCell>
-              <TableCell className="flex gap-1">
-                <Button asChild variant="outline" size="sm">
-                  <Link href={`/admin/products/${product.id}`}>Edit</Link>
-                </Button>
-                <DeleteDialog id={product.id} action={deleteProduct} />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      {products.totalPages > 1 && (
-        <Pagination page={page} totalPages={products.totalPages} />
+      {products.data.length > 0 ? (
+        <>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>ID</TableHead>
+                <TableHead>NAME</TableHead>
+                <TableHead className="text-right">PRICE</TableHead>
+                <TableHead>CATEGORY</TableHead>
+                <TableHead>STOCK</TableHead>
+                <TableHead>RATING</TableHead>
+                <TableHead className="w-[100px]">ACTIONS</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {products.data.map((product) => (
+                <TableRow key={product.id}>
+                  <TableCell>{formatId(product.id)}</TableCell>
+                  <TableCell>{product.name}</TableCell>
+                  <TableCell className="text-right">
+                    {formatCurrency(product.price)}
+                  </TableCell>
+                  <TableCell>{product.category}</TableCell>
+                  <TableCell>{product.stock}</TableCell>
+                  <TableCell>{product.rating}</TableCell>
+                  <TableCell className="flex gap-1">
+                    <Button asChild variant="outline" size="sm">
+                      <Link href={`/admin/products/${product.id}`}>Edit</Link>
+                    </Button>
+                    <DeleteDialog id={product.id} action={deleteProduct} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          {products.totalPages > 1 && (
+            <Pagination page={page} totalPages={products.totalPages} />
+          )}
+        </>
+      ) : (
+        <div>Sorry no products available, please add some to get started.</div>
       )}
     </div>
   );

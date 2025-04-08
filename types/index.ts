@@ -1,15 +1,15 @@
-import { z } from 'zod';
+import { z } from "zod";
 import {
-  insertProductSchema,
+  productFormSchema,
   cartItemSchema,
   insertCartSchema,
   shippingAddressSchema,
   insertOrderItemSchema,
   insertOrderSchema,
   paymentResultSchema,
-} from '@/lib/validators';
+} from "@/lib/validators";
 
-export type Product = z.infer<typeof insertProductSchema> & {
+export type Product = z.infer<typeof productFormSchema> & {
   id: string;
   rating: string;
   createdAt: Date;
