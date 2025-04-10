@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Menu from "./Menu";
 import CategoryDrawer from "./CategoryDrawer";
+import Search from "./Search";
 
 function Header() {
   return (
@@ -22,6 +23,9 @@ function Header() {
               {APP_NAME}
             </span>
           </Link>
+        </div>
+        <div className="hidden md:block">
+          <Search />
         </div>
         <div className="space-x-2">
           <Menu />
