@@ -69,8 +69,8 @@ function ReviewList({
               <div className="flex-between">
                 <CardTitle>{review.title}</CardTitle>
               </div>
+              <CardDescription>{review.description}</CardDescription>
             </CardHeader>
-            <CardDescription>{review.description}</CardDescription>
             <CardContent>
               <div className="flex space-x-4 text-sm text-muted-foreground">
                 <Rating value={review.rating} />
