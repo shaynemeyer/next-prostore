@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -6,7 +6,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -14,23 +14,28 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { reviewFormDefaultValues } from '@/lib/constants';
-import { insertReviewSchema } from '@/lib/validators';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { StarIcon } from 'lucide-react';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  createUpdateReview,
+  getReviewByProductId,
+} from "@/lib/actions/review.actions";
+import { reviewFormDefaultValues } from "@/lib/constants";
+import { insertReviewSchema } from "@/lib/validators";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { StarIcon } from "lucide-react";
+import React, { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 function ReviewForm({
   userId,
@@ -39,7 +44,7 @@ function ReviewForm({
 }: {
   userId: string;
   productId: string;
-  onReviewSubmitted?: () => void;
+  onReviewSubmitted: () => void;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -49,21 +54,35 @@ function ReviewForm({
   });
 
   const handleOpenForm = async () => {
-    form.setValue('productId', productId);
-    form.setValue('userId', userId);
+    form.setValue("productId", productId);
+    form.setValue("userId", userId);
 
-    // const review = await getReviewByProductId({ productId });
+    const review = await getReviewByProductId({ productId });
 
-    // if (review) {
-    //   form.setValue('title', review.title);
-    //   form.setValue('description', review.description);
-    //   form.setValue('rating', review.rating);
-    // }
+    if (review) {
+      form.setValue("title", review.title);
+      form.setValue("description", review.description);
+      form.setValue("rating", review.rating);
+    }
 
     setOpen(true);
   };
 
-  const onSubmit = () => {};
+  const onSubmit: SubmitHandler<z.infer<typeof insertReviewSchema>> = async (
+    values
+  ) => {
+    const res = await createUpdateReview({ ...values, productId });
+
+    if (!res.success) {
+      return toast.error(res.message);
+    }
+
+    setOpen(false);
+
+    onReviewSubmitted();
+
+    toast.success(res.message);
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -129,7 +148,7 @@ function ReviewForm({
                               key={index}
                               value={(index + 1).toString()}
                             >
-                              {index + 1}{' '}
+                              {index + 1}{" "}
                               <StarIcon className="inline h-4 w-4" />
                             </SelectItem>
                           ))}
@@ -148,7 +167,7 @@ function ReviewForm({
                 className="w-full"
                 disabled={form.formState.isSubmitting}
               >
-                {form.formState.isSubmitting ? 'Submitting...' : 'Submit'}
+                {form.formState.isSubmitting ? "Submitting..." : "Submit"}
               </Button>
             </DialogFooter>
           </form>

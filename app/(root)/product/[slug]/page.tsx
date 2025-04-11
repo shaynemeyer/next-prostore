@@ -1,13 +1,14 @@
-import { auth } from '@/auth';
-import AddToCart from '@/components/shared/product/AddToCart';
-import ProductImages from '@/components/shared/product/ProductImages';
-import ProductPrice from '@/components/shared/product/ProductPrice';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
-import { getMyCart } from '@/lib/actions/cart.actions';
-import { getProductBySlug } from '@/lib/actions/product.actions';
-import { notFound } from 'next/navigation';
-import ReviewList from './ReviewList';
+import { auth } from "@/auth";
+import AddToCart from "@/components/shared/product/AddToCart";
+import ProductImages from "@/components/shared/product/ProductImages";
+import ProductPrice from "@/components/shared/product/ProductPrice";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { getMyCart } from "@/lib/actions/cart.actions";
+import { getProductBySlug } from "@/lib/actions/product.actions";
+import { notFound } from "next/navigation";
+import ReviewList from "./ReviewList";
+import Rating from "@/components/shared/product/Rating";
 
 async function ProductDetailsPage(props: {
   params: Promise<{ slug: string }>;
@@ -37,9 +38,8 @@ async function ProductDetailsPage(props: {
                 {product.brand} {product.category}
               </p>
               <h1 className="h3-bold">{product.name}</h1>
-              <p>
-                {product.rating} of {product.numReviews} Reviews
-              </p>
+              <Rating value={Number(product.rating)} />
+              <p>{product.numReviews} reviews</p>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <ProductPrice
                   value={Number(product.price)}
@@ -93,7 +93,7 @@ async function ProductDetailsPage(props: {
       <section className="mt-10">
         <h2 className="h2-bold mb-5">Customer Reviews</h2>
         <ReviewList
-          userId={userId || ''}
+          userId={userId || ""}
           productId={product.id}
           productSlug={product.slug}
         />
