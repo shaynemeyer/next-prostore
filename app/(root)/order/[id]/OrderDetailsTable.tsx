@@ -1,6 +1,6 @@
-'use client';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
+"use client";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -8,32 +8,35 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { formatCurrency, formatDateTime, formatId } from '@/lib/utils';
-import { Order } from '@/types';
-import Link from 'next/link';
-import Image from 'next/image';
-import { toast } from 'sonner';
+} from "@/components/ui/table";
+import { formatCurrency, formatDateTime, formatId } from "@/lib/utils";
+import { Order } from "@/types";
+import Link from "next/link";
+import Image from "next/image";
+import { toast } from "sonner";
 import {
   PayPalButtons,
   PayPalScriptProvider,
   usePayPalScriptReducer,
-} from '@paypal/react-paypal-js';
+} from "@paypal/react-paypal-js";
 import {
   createPayPalOrder,
   approvePayPalOrder,
-} from '@/lib/actions/order.actions';
-import MarkAsPaidButton from './MarkAsPaidButton';
-import MarkAsDeliveredButton from './MarkAsDeliveredButton';
+} from "@/lib/actions/order.actions";
+import MarkAsPaidButton from "./MarkAsPaidButton";
+import MarkAsDeliveredButton from "./MarkAsDeliveredButton";
+import StripePayment from "./StripePayment";
 
 function OrderDetailsTable({
   order,
   paypalClientId,
   isAdmin,
+  stripeClientSecret,
 }: {
-  order: Omit<Order, 'paymentResult'>;
+  order: Omit<Order, "paymentResult">;
   paypalClientId: string;
   isAdmin: boolean;
+  stripeClientSecret: string | null;
 }) {
   const {
     shippingAddress,
@@ -51,12 +54,12 @@ function OrderDetailsTable({
 
   const PrintLoadingState = () => {
     const [{ isPending, isRejected }] = usePayPalScriptReducer();
-    let status = '';
+    let status = "";
 
     if (isPending) {
-      status = 'Loading PayPal...';
+      status = "Loading PayPal...";
     } else if (isRejected) {
-      status = 'Error Loading PayPal';
+      status = "Error Loading PayPal";
     }
     return status;
   };
@@ -177,7 +180,7 @@ function OrderDetailsTable({
                 <div>{formatCurrency(totalPrice)}</div>
               </div>
               {/* PayPal Payment */}
-              {!isPaid && paymentMethod === 'PayPal' && (
+              {!isPaid && paymentMethod === "PayPal" && (
                 <div>
                   <PayPalScriptProvider options={{ clientId: paypalClientId }}>
                     <PrintLoadingState />
@@ -188,8 +191,18 @@ function OrderDetailsTable({
                   </PayPalScriptProvider>
                 </div>
               )}
+
+              {/* Stripe Payment */}
+              {!isPaid && paymentMethod === "Stripe" && stripeClientSecret && (
+                <StripePayment
+                  priceInCents={Number(order.totalPrice) * 100}
+                  orderId={order.id}
+                  clientSecret={stripeClientSecret}
+                />
+              )}
+
               {/* Cash On Deliver */}
-              {isAdmin && !isPaid && paymentMethod === 'CashOnDelivery' && (
+              {isAdmin && !isPaid && paymentMethod === "CashOnDelivery" && (
                 <MarkAsPaidButton id={order.id} />
               )}
 
