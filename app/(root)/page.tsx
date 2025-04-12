@@ -1,11 +1,12 @@
-import IconBoxes from "@/components/IconBoxes";
-import ProductCarousel from "@/components/shared/product/ProductCarousel";
-import ProductList from "@/components/shared/product/ProductList";
-import ViewAllProductsButton from "@/components/ViewAllProductsButton";
+import DealCountdown from '@/components/DealCountdown';
+import IconBoxes from '@/components/IconBoxes';
+import ProductCarousel from '@/components/shared/product/ProductCarousel';
+import ProductList from '@/components/shared/product/ProductList';
+import ViewAllProductsButton from '@/components/ViewAllProductsButton';
 import {
   getLatestProducts,
   getFeaturedProducts,
-} from "@/lib/actions/product.actions";
+} from '@/lib/actions/product.actions';
 
 async function Homepage() {
   const latestProducts = await getLatestProducts();
@@ -19,6 +20,7 @@ async function Homepage() {
 
       <ProductList data={latestProducts} title="Newest Arrivals" limit={4} />
       <ViewAllProductsButton />
+      <DealCountdown />
       <IconBoxes />
     </div>
   );
