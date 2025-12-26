@@ -1,13 +1,12 @@
-import { Metadata } from "next";
-import { getOrderById } from "@/lib/actions/order.actions";
-import { notFound, redirect } from "next/navigation";
-import OrderDetailsTable from "./OrderDetailsTable";
-import { ShippingAddress } from "@/types";
-import { auth } from "@/auth";
-import Stripe from "stripe";
+import { Metadata } from 'next';
+import { getOrderById } from '@/lib/actions/order.actions';
+import { notFound, redirect } from 'next/navigation';
+import OrderDetailsTable from './OrderDetailsTable';
+import { ShippingAddress } from '@/types';
+import { auth } from '@/auth';
 
 export const metadata: Metadata = {
-  title: "Order Details",
+  title: 'Order Details',
 };
 
 async function OrderDetailsPage(props: {
@@ -24,21 +23,21 @@ async function OrderDetailsPage(props: {
   const session = await auth();
 
   // Redirect the user if they don't own the order
-  if (order.userId !== session?.user.id && session?.user.role !== "admin") {
-    return redirect("/unauthorized");
+  if (order.userId !== session?.user.id && session?.user.role !== 'admin') {
+    return redirect('/unauthorized');
   }
 
   let client_secret = null;
 
   // Check if is not paid and using stripe
-  if (order.paymentMethod === "Stripe" && !order.isPaid) {
+  if (order.paymentMethod === 'Stripe' && !order.isPaid) {
     // Init Stripe instance
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
     // Create payment intent
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(Number(order.totalPrice) * 100),
-      currency: "USD",
+      currency: 'USD',
       metadata: { orderId: order.id },
     });
     client_secret = paymentIntent.client_secret;
@@ -53,8 +52,8 @@ async function OrderDetailsPage(props: {
             shippingAddress: order.shippingAddress as ShippingAddress,
           }}
           stripeClientSecret={client_secret}
-          paypalClientId={process.env.PAYPAL_CLIENT_ID || "sb"}
-          isAdmin={session?.user?.role === "admin" || false}
+          paypalClientId={process.env.PAYPAL_CLIENT_ID || 'sb'}
+          isAdmin={session?.user?.role === 'admin' || false}
         />
       )}
     </>
